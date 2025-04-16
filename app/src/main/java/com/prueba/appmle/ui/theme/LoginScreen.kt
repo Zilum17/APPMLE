@@ -52,7 +52,6 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(viewModel: LoginViewModel) {
-    val context = LocalContext.current
 
     val email: String by viewModel.email.observeAsState(initial = "")
     val isValidEmail: Boolean by viewModel.isValidEmail.observeAsState(initial = false)
