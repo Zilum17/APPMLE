@@ -1,13 +1,9 @@
 package com.prueba.appmle.ui.theme
 
 import android.content.Context
-import android.util.Patterns
 import android.widget.Toast
 import androidx.compose.animation.core.tween
-import com.prueba.appmle.R
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -36,131 +31,202 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.animation.core.Animatable
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.prueba.appmle.viewmodel.LoginViewModel
+import kotlinx.coroutines.launch
 
-@Preview(showBackground = true)
+
 @Composable
-fun LoginScreen() {
+fun LoginScreen(viewModel: LoginViewModel) {
     val context = LocalContext.current
 
-    var email by remember { mutableStateOf("") }
-    var isValidEmail by remember { mutableStateOf(false) }
+    val email: String by viewModel.email.observeAsState(initial = "")
+    val isValidEmail: Boolean by viewModel.isValidEmail.observeAsState(initial = false)
 
-    var password by remember { mutableStateOf("") }
-    var isValidPassword by remember { mutableStateOf(false) }
+    val password: String by viewModel.password.observeAsState(initial = "")
+    val isValidPassword: Boolean by viewModel.isValidPassword.observeAsState(initial = false)
+
+    val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
 
     var passwordVisible by remember { mutableStateOf(false) }
 
     val letterSpacing = remember { Animatable(1f) }
+    val interactionSource = remember { MutableInteractionSource() }
+    val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(Unit) {
-        letterSpacing.animateTo(
-            targetValue = 4f,
-            animationSpec = tween(
-                durationMillis = 1000,
-                delayMillis = 200
-            )
-        )
-    }
+    if (isLoading) {
+        Box(Modifier.fillMaxSize()) {
+            CircularProgressIndicator(Modifier.align(Alignment.Center))
+        }
+    } else {
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color4)) {
-        Image(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.TopCenter),
-            painter = painterResource(id = R.drawable.svgtoplogin),
-            contentDescription = "SVG top"
-        )
-        Column(
-            Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                ) {
-            Card (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(500.dp),
-                shape = RoundedCornerShape(30.dp, 30.dp, 0.dp, 0.dp),
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = 20.dp
-                ),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color7
+        LaunchedEffect(Unit) {
+            letterSpacing.animateTo(
+                targetValue = 4f,
+                animationSpec = tween(
+                    durationMillis = 1000,
+                    delayMillis = 200
                 )
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color4)
+        ) {
+            Column(
+                Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column (
-                    Modifier
-                        .padding(16.dp)
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    shape = RoundedCornerShape(30.dp, 30.dp, 0.dp, 0.dp),
+                    elevation = CardDefaults.cardElevation(
+                        defaultElevation = 20.dp
+                    ),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color7
+                    )
                 ) {
-                    Text(
-                        modifier = Modifier.padding(10.dp,20.dp).fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        text = "INICIAR SESION",
-                        style = Typography.titleLarge.copy(
-                            letterSpacing = letterSpacing.value.sp
-                        ),
-                        color = Color5
-                    )
-                    RowEmail(
-                        email = email,
-                        emailChange = {
-                            email = it
-                            isValidEmail = Patterns.EMAIL_ADDRESS.matcher(email).matches()
-                        },
-                        isValidEmail
-                    )
-                    RowPassword(
-                        password = password,
-                        passwordChange = {
-                            password = it
-                            isValidPassword = password.length >= 6
-                        },
-                        passwordVisible = passwordVisible,
-                        passwordVisibleChange = {
-                            passwordVisible = !passwordVisible
-                        },
-                        isValidPassword
-                    )
-                    RowButtonLogin(
-                        context = context,
-                        isValidEmail,
-                        isValidPassword
-                    )
+                    Column(
+                        Modifier
+                            .padding(16.dp, 16.dp, 16.dp, 48.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(25.dp).fillMaxWidth(),
+                            textAlign = TextAlign.Center,
+                            text = "My Little Entrepreneurship".uppercase(),
+                            style = Typography.titleLarge.copy(
+                                letterSpacing = letterSpacing.value.sp,
+                                fontWeight = FontWeight.Bold
+                            ),
+                            color = Color5
+                        )
+                        Text(
+                            modifier = Modifier.padding(25.dp, 5.dp).fillMaxWidth(),
+                            text = "Bienvenido",
+                            style = Typography.titleLarge.copy(
+                                letterSpacing = 0.5.sp
+                            ),
+                            color = Color1
+                        )
+                        Text(
+                            modifier = Modifier.padding(25.dp, 0.dp, 25.dp, 0.dp).fillMaxWidth(),
+                            text = "Inicia Sesion para continuar",
+                            style = Typography.bodyLarge,
+                            color = Color3
+                        )
+                        RowEmail(
+                            email = email,
+                            emailChange = { newEmail ->
+                                viewModel.updateEmail(newEmail)
+                            },
+                            isValid = isValidEmail
+                        )
+                        RowPassword(
+                            password = password,
+                            passwordChange = { newPassword ->
+                                viewModel.updatePassword(newPassword)
+                            },
+                            isValidPassword = isValidPassword,
+                            passwordVisible = passwordVisible,
+                            passwordVisibleChange = {
+                                passwordVisible = !passwordVisible
+                            }
+                        )
+                        Text(
+                            text = "¿Olvidaste tu contraseña?",
+                            modifier = Modifier
+                                .clickable(
+                                    interactionSource = interactionSource,
+                                    indication = null
+                                ) {
+                                    println("¡Clic en el texto!")
+                                }
+                                .padding(25.dp, 10.dp)
+                                .fillMaxWidth(),
+                            textAlign = TextAlign.End,
+                            color = Color5,
+                            style = Typography.bodyLarge
+                        )
+                        RowButtonLogin(
+                            isValidEmail,
+                            isValidPassword
+                        ) {
+                            coroutineScope.launch() {
+                                viewModel.onLoginSelected()
+                            }
+                        }
+                        Row(
+                            modifier = Modifier
+                                .padding(25.dp, 15.dp)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(0.dp, 0.dp, 5.dp, 0.dp),
+                                text = "¿No tienes una cuenta?",
+                                style = Typography.bodyLarge,
+                                color = Color3
+                            )
+                            Text(
+                                text = "Registrate",
+                                modifier = Modifier
+                                    .clickable(
+                                        interactionSource = interactionSource,
+                                        indication = null
+                                    ) {
+                                        println("¡Clic en el texto!")
+                                    },
+                                textAlign = TextAlign.End,
+                                color = Color5,
+                                style = Typography.bodyLarge
+                            )
+                        }
+                    }
                 }
             }
         }
     }
+
 }
 
 @Composable
 fun RowButtonLogin(
-    context: Context,
     isValidEmail: Boolean,
-    isValidPassword: Boolean
+    isValidPassword: Boolean,
+    onLoginSelected: () -> Unit
 ) {
     Row (
         Modifier
             .fillMaxWidth()
-            .padding(10.dp),
-        horizontalArrangement = Arrangement.Center
+            .padding(25.dp, 15.dp),
+        horizontalArrangement = Arrangement.Center,
 
     ) {
         Button(
-            modifier = Modifier.width(160.dp).height(50.dp),
-            onClick = { login(context) },
+            modifier = Modifier.fillMaxWidth(1f).height(55.dp),
+            onClick = { onLoginSelected() },
             enabled = isValidEmail && isValidPassword,
             shape = RoundedCornerShape(4.dp),
             colors = ButtonDefaults.buttonColors(
@@ -169,7 +235,10 @@ fun RowButtonLogin(
                 disabledContentColor = Color6
             )
         ) {
-            Text(text = "ingresar".uppercase(),style = Typography.bodyMedium)
+            Text(
+                text = "ingresar".uppercase(),
+                style = Typography.bodyMedium
+            )
         }
     }
 }
@@ -187,10 +256,11 @@ fun RowEmail(
     Row (
         Modifier
             .fillMaxWidth()
-            .padding(10.dp),
+            .padding(25.dp, 10.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(1f),
             value = email,
             onValueChange = emailChange,
             label = { Text(text = "Email", style = Typography.bodyLarge) },
@@ -238,13 +308,14 @@ fun RowPassword(
     Row (
         Modifier
             .fillMaxWidth()
-            .padding(10.dp),
+            .padding(25.dp, 10.dp, 25.dp, 5.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(1f),
             value = password,
             onValueChange = passwordChange,
-            label = { Text(text = "Contraseña",style = Typography.bodyLarge,) },
+            label = { Text(text = "Contraseña",style = Typography.bodyLarge) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             maxLines = 1,
             singleLine = true,
