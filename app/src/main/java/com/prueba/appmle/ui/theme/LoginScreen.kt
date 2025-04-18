@@ -1,7 +1,5 @@
 package com.prueba.appmle.ui.theme
 
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -30,7 +28,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -40,19 +37,29 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.prueba.appmle.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
-
+import androidx.navigation.NavController
+import com.prueba.appmle.ui.theme.utils.Color1
+import com.prueba.appmle.ui.theme.utils.Color3
+import com.prueba.appmle.ui.theme.utils.Color4
+import com.prueba.appmle.ui.theme.utils.Color5
+import com.prueba.appmle.ui.theme.utils.Color6
+import com.prueba.appmle.ui.theme.utils.Color7
+import com.prueba.appmle.ui.theme.utils.Color8
+import com.prueba.appmle.ui.theme.utils.Loading
+import com.prueba.appmle.ui.theme.utils.Typography
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel) {
-
+fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
+    val context = LocalContext.current
     val email: String by viewModel.email.observeAsState(initial = "")
     val isValidEmail: Boolean by viewModel.isValidEmail.observeAsState(initial = false)
 
@@ -68,14 +75,12 @@ fun LoginScreen(viewModel: LoginViewModel) {
     val coroutineScope = rememberCoroutineScope()
 
     if (isLoading) {
-        Box(Modifier.fillMaxSize()) {
-            CircularProgressIndicator(Modifier.align(Alignment.Center))
-        }
+        Loading()
     } else {
 
         LaunchedEffect(Unit) {
             letterSpacing.animateTo(
-                targetValue = 4f,
+                targetValue = 6f,
                 animationSpec = tween(
                     durationMillis = 1000,
                     delayMillis = 200
@@ -96,7 +101,8 @@ fun LoginScreen(viewModel: LoginViewModel) {
             ) {
                 Card(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .height(650.dp),
                     shape = RoundedCornerShape(30.dp, 30.dp, 0.dp, 0.dp),
                     elevation = CardDefaults.cardElevation(
                         defaultElevation = 20.dp
@@ -112,12 +118,13 @@ fun LoginScreen(viewModel: LoginViewModel) {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            modifier = Modifier.padding(25.dp).fillMaxWidth(),
+                            modifier = Modifier.padding(25.dp, 40.dp).fillMaxWidth(),
                             textAlign = TextAlign.Center,
-                            text = "My Little Entrepreneurship".uppercase(),
+                            text = "EmprendiAPP".uppercase(),
                             style = Typography.titleLarge.copy(
                                 letterSpacing = letterSpacing.value.sp,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 32.sp
                             ),
                             color = Color5
                         )
@@ -169,11 +176,15 @@ fun LoginScreen(viewModel: LoginViewModel) {
                             style = Typography.bodyLarge
                         )
                         RowButtonLogin(
-                            isValidEmail,
-                            isValidPassword
+                            isActive = isValidPassword && isValidEmail,
                         ) {
-                            coroutineScope.launch() {
-                                viewModel.onLoginSelected()
+                            coroutineScope.launch{
+                                val loginSuccess = viewModel.login(context)
+                                if (loginSuccess) {
+                                    navController.navigate("home") {
+                                        popUpTo("login") { inclusive = true }
+                                    }
+                                }
                             }
                         }
                         Row(
@@ -195,7 +206,9 @@ fun LoginScreen(viewModel: LoginViewModel) {
                                         interactionSource = interactionSource,
                                         indication = null
                                     ) {
-                                        println("¡Clic en el texto!")
+                                        navController.navigate("register") {
+                                            popUpTo("login") { inclusive = true }
+                                        }
                                     },
                                 textAlign = TextAlign.End,
                                 color = Color5,
@@ -212,8 +225,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
 
 @Composable
 fun RowButtonLogin(
-    isValidEmail: Boolean,
-    isValidPassword: Boolean,
+    isActive: Boolean,
     onLoginSelected: () -> Unit
 ) {
     Row (
@@ -226,7 +238,7 @@ fun RowButtonLogin(
         Button(
             modifier = Modifier.fillMaxWidth(1f).height(55.dp),
             onClick = { onLoginSelected() },
-            enabled = isValidEmail && isValidPassword,
+            enabled = isActive,
             shape = RoundedCornerShape(4.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color5,
@@ -241,11 +253,6 @@ fun RowButtonLogin(
         }
     }
 }
-
-fun login(context: Context) {
-    Toast.makeText(context, "FAKE LOGIN", Toast.LENGTH_LONG).show()
-}
-
 @Composable
 fun RowEmail(
     email: String,
@@ -277,7 +284,7 @@ fun RowEmail(
                     unfocusedContainerColor = Color6,
                     cursorColor = Color5,
                     focusedIndicatorColor = Color8,
-                    unfocusedIndicatorColor = Color8,
+                    unfocusedIndicatorColor = Color8
                 )
             } else {
                 TextFieldDefaults.colors(
@@ -289,7 +296,7 @@ fun RowEmail(
                     unfocusedContainerColor = Color6,
                     focusedIndicatorColor = Color5,
                     unfocusedIndicatorColor = Color5,
-                    cursorColor = Color5,
+                    cursorColor = Color5
                 )
             }
         )
@@ -349,7 +356,7 @@ fun RowPassword(
                     unfocusedContainerColor = Color6,
                     cursorColor = Color5,
                     focusedIndicatorColor = Color8,
-                    unfocusedIndicatorColor = Color8,
+                    unfocusedIndicatorColor = Color8
                 )
             } else {
                 TextFieldDefaults.colors(
@@ -361,8 +368,7 @@ fun RowPassword(
                     unfocusedContainerColor = Color6,
                     focusedIndicatorColor = Color5,
                     unfocusedIndicatorColor = Color5,
-                    cursorColor = Color5,
-                    errorIndicatorColor = Color9
+                    cursorColor = Color5
                 )
             }
         )

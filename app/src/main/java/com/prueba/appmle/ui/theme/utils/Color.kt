@@ -1,4 +1,4 @@
-package com.prueba.appmle.ui.theme
+package com.prueba.appmle.ui.theme.utils
 
 import androidx.compose.ui.graphics.Color
 

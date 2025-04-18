@@ -1,6 +1,5 @@
-package com.prueba.appmle.ui.theme
+package com.prueba.appmle.ui.theme.utils
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -12,25 +11,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = Color1,
+    secondary = Color5,
+    background = Color3,
+    surface = Color4,
+    onBackground = Color4,
+    onSurface = Color4
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    primary = Color1,
+    secondary = Color5,
+    background = Color3,
+    surface = Color4,
+    onBackground = Color4,
+    onSurface = Color4
 )
 
 @Composable
