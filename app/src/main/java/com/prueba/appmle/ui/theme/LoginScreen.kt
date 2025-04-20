@@ -74,10 +74,25 @@ fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
     val interactionSource = remember { MutableInteractionSource() }
     val coroutineScope = rememberCoroutineScope()
 
+    val tokenExists: Boolean by viewModel.tokenVerificationResult.observeAsState(false)
+    LaunchedEffect(Unit) {
+        if (!tokenExists) {
+            viewModel.verifyToken(context)
+        }
+    }
+    LaunchedEffect(tokenExists) {
+        if (tokenExists) {
+            navController.navigate("home") {
+                popUpTo("login") {
+                    inclusive = true
+                }
+            }
+        }
+    }
+
     if (isLoading) {
         Loading()
     } else {
-
         LaunchedEffect(Unit) {
             letterSpacing.animateTo(
                 targetValue = 6f,
@@ -87,7 +102,6 @@ fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
                 )
             )
         }
-
         Box(
             modifier = Modifier
                 .fillMaxSize()

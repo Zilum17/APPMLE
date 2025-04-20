@@ -12,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.APPMLE"
         tools:targetApi="31"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        android:enableOnBackInvokedCallback="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"

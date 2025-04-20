@@ -36,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -53,178 +54,194 @@ import com.prueba.appmle.ui.theme.utils.Color5
 import com.prueba.appmle.ui.theme.utils.Color6
 import com.prueba.appmle.ui.theme.utils.Color7
 import com.prueba.appmle.ui.theme.utils.Color8
+import com.prueba.appmle.ui.theme.utils.Loading
 import com.prueba.appmle.ui.theme.utils.Typography
 import com.prueba.appmle.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
 
-@Preview
 @Composable
-fun RegisterScreen () {
+fun RegisterScreen (viewModel: LoginViewModel, navController: NavController) {
 
-//    BackHandler {
-//        navController.navigate("login") {
-//            popUpTo("register") { inclusive = true }
-//        }
-//    }
+    BackHandler {
+        navController.navigate("login") {
+            popUpTo("register") { inclusive = true }
+        }
+    }
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
-    var email by remember { mutableStateOf("") }
-    var isValidEmail by remember { mutableStateOf(false) }
+    val firstNameR: String by viewModel.firstNameR.observeAsState(initial = "")
+    val isValidFirstNameR: Boolean by viewModel.isValidFirstNameR.observeAsState(initial = false)
 
-    var firstName by remember { mutableStateOf("") }
-    var isValidFirstName by remember { mutableStateOf(false) }
+    val lastNameR: String by viewModel.lastNameR.observeAsState(initial = "")
+    val isValidLastNameR: Boolean by viewModel.isValidLastNameR.observeAsState(initial = false)
 
-    var lastName by remember { mutableStateOf("") }
-    var isValidLastName by remember { mutableStateOf(false) }
+    val emailR: String by viewModel.emailR.observeAsState(initial = "")
+    val isValidEmailR: Boolean by viewModel.isValidEmailR.observeAsState(initial = false)
 
-    var password by remember { mutableStateOf("") }
-    var isValidPassword by remember { mutableStateOf(false) }
+    val passwordR: String by viewModel.passwordR.observeAsState(initial = "")
+    val isValidPasswordR: Boolean by viewModel.isValidPasswordR.observeAsState(initial = false)
+
+    val passwordCR: String by viewModel.passwordCR.observeAsState(initial = "")
+    val isValidPasswordCR: Boolean by viewModel.isValidPasswordCR.observeAsState(initial = false)
+
+    val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
+
     var passwordVisible by remember { mutableStateOf(false) }
-
-    var passwordC by remember { mutableStateOf("") }
-    var isValidPasswordC by remember { mutableStateOf(false) }
     var passwordVisibleC by remember { mutableStateOf(false) }
 
     val interactionSource = remember { MutableInteractionSource() }
     val letterSpacing = remember { Animatable(1f) }
-
-    LaunchedEffect(Unit) {
-        letterSpacing.animateTo(
-            targetValue = 6f,
-            animationSpec = tween(
-                durationMillis = 1000,
-                delayMillis = 200
-            )
-        )
-    }
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color4)
-    ) {
-        Column(
-            Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(750.dp),
-                shape = RoundedCornerShape(30.dp, 30.dp, 0.dp, 0.dp),
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = 20.dp
-                ),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color7
+    if (isLoading) {
+        Loading()
+    } else {
+        LaunchedEffect(Unit) {
+            letterSpacing.animateTo(
+                targetValue = 6f,
+                animationSpec = tween(
+                    durationMillis = 1000,
+                    delayMillis = 200
                 )
-            ) {
-                Column(
-                    Modifier
-                        .padding(16.dp, 16.dp, 16.dp, 48.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        modifier = Modifier.padding(25.dp, 20.dp).fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        text = "EmprendiAPP".uppercase(),
-                        style = Typography.titleLarge.copy(
-                            letterSpacing = letterSpacing.value.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 32.sp
-                        ),
-                        color = Color5
-                    )
-                    Text(
-                        modifier = Modifier.padding(25.dp, 5.dp).fillMaxWidth(),
-                        text = "Bienvenido",
-                        style = Typography.titleLarge.copy(
-                            letterSpacing = 0.5.sp
-                        ),
-                        color = Color1
-                    )
-                    Text(
-                        modifier = Modifier.padding(25.dp, 0.dp, 25.dp, 0.dp).fillMaxWidth(),
-                        text = "Registrate para continuar",
-                        style = Typography.bodyLarge,
-                        color = Color3
-                    )
-                    RowFirstNameR(
-                        firstName = firstName,
-                        firstNameChange = {
-                            firstName = it
-                        },
-                        isValid = isValidFirstName
-                    )
-                    RowLastNameR(
-                        lastName = lastName,
-                        lastNameChange = {
-                            lastName = it
-                        },
-                        isValid = isValidLastName
-                    )
-                    RowEmailR(
-                        email = email,
-                        emailChange = {
-                            email = it
-                                      },
-                        isValid = isValidEmail
-                    )
-                    RowPasswordR(
-                        password = password,
-                        passwordChange = {
-                            password = it
-                        },
-                        isValidPassword = isValidPassword,
-                        passwordVisible = passwordVisible,
-                        passwordVisibleChange = {
-                            passwordVisible = !passwordVisible
-                        }
-                    )
-                    RowPasswordRC(
-                        password = passwordC,
-                        passwordChange = {
-                            passwordC = it
-                        },
-                        isValidPassword = password == passwordC && passwordC.isNotEmpty(),
-                        passwordVisible = passwordVisibleC,
-                        passwordVisibleChange = {
-                            passwordVisibleC = !passwordVisibleC
-                        }
-                    )
-                    RowButtonLogin(
-                        isActive = isValidEmail && isValidPassword && isValidFirstName && isValidLastName &&password == passwordC,
-                    ) {
+            )
+        }
 
-                    }
-                    Row(
-                        modifier = Modifier
-                            .padding(25.dp, 15.dp)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color4)
+        ) {
+            Column(
+                Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(750.dp),
+                    shape = RoundedCornerShape(30.dp, 30.dp, 0.dp, 0.dp),
+                    elevation = CardDefaults.cardElevation(
+                        defaultElevation = 20.dp
+                    ),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color7
+                    )
+                ) {
+                    Column(
+                        Modifier
+                            .padding(16.dp, 16.dp, 16.dp, 48.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            modifier = Modifier.padding(0.dp, 0.dp, 5.dp, 0.dp),
-                            text = "¿Tienes una cuenta?",
+                            modifier = Modifier.padding(25.dp, 20.dp).fillMaxWidth(),
+                            textAlign = TextAlign.Center,
+                            text = "EmprendiAPP".uppercase(),
+                            style = Typography.titleLarge.copy(
+                                letterSpacing = letterSpacing.value.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 32.sp
+                            ),
+                            color = Color5
+                        )
+                        Text(
+                            modifier = Modifier.padding(25.dp, 5.dp).fillMaxWidth(),
+                            text = "Bienvenido",
+                            style = Typography.titleLarge.copy(
+                                letterSpacing = 0.5.sp
+                            ),
+                            color = Color1
+                        )
+                        Text(
+                            modifier = Modifier.padding(25.dp, 0.dp, 25.dp, 0.dp).fillMaxWidth(),
+                            text = "Registrate para continuar",
                             style = Typography.bodyLarge,
                             color = Color3
                         )
-                        Text(
-                            text = "Inicia Sesion",
-                            modifier = Modifier
-                                .clickable(
-                                    interactionSource = interactionSource,
-                                    indication = null
-                                ) {
-
-                                },
-                            textAlign = TextAlign.End,
-                            color = Color5,
-                            style = Typography.bodyLarge
+                        RowFirstNameR(
+                            firstName = firstNameR,
+                            firstNameChange = { newFirstNameR ->
+                                viewModel.updateFirstNameR(newFirstNameR)
+                            },
+                            isValid = isValidFirstNameR
                         )
+                        RowLastNameR(
+                            lastName = lastNameR,
+                            lastNameChange = { newLastNameR ->
+                                viewModel.updateLastNameR(newLastNameR)
+                            },
+                            isValid = isValidLastNameR
+                        )
+                        RowEmailR(
+                            email = emailR,
+                            emailChange = { newEmail ->
+                                viewModel.updateEmailR(newEmail)
+                            },
+                            isValid = isValidEmailR
+                        )
+                        RowPasswordR(
+                            password = passwordR,
+                            passwordChange = { newPassword ->
+                                viewModel.updatePasswordR(newPassword)
+                            },
+                            isValidPassword = isValidPasswordR,
+                            passwordVisible = passwordVisible,
+                            passwordVisibleChange = {
+                                passwordVisible = !passwordVisible
+                            }
+                        )
+                        RowPasswordCR(
+                            password = passwordCR,
+                            passwordChange = { newPassword ->
+                                viewModel.updatePasswordCR(newPassword)
+                            },
+                            isValidPassword = isValidPasswordCR,
+                            passwordVisible = passwordVisibleC,
+                            passwordVisibleChange = {
+                                passwordVisibleC = !passwordVisibleC
+                            }
+                        )
+                        RowButtonLogin(
+                            isActive = isValidEmailR && isValidPasswordR && isValidFirstNameR && isValidLastNameR && isValidPasswordCR,
+                        ) {
+                            coroutineScope.launch{
+                                val registerSuccess = viewModel.register(context)
+                                if (registerSuccess) {
+                                    navController.navigate("home") {
+                                        popUpTo("register") { inclusive = true }
+                                    }
+                                }
+                            }
+                        }
+                        Row(
+                            modifier = Modifier
+                                .padding(25.dp, 15.dp)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(0.dp, 0.dp, 5.dp, 0.dp),
+                                text = "¿Tienes una cuenta?",
+                                style = Typography.bodyLarge,
+                                color = Color3
+                            )
+                            Text(
+                                text = "Inicia Sesion",
+                                modifier = Modifier
+                                    .clickable(
+                                        interactionSource = interactionSource,
+                                        indication = null
+                                    ) {
+                                        navController.navigate("login") {
+                                            popUpTo("register") { inclusive = true }
+                                        }
+                                    },
+                                textAlign = TextAlign.End,
+                                color = Color5,
+                                style = Typography.bodyLarge
+                            )
+                        }
                     }
                 }
             }
@@ -457,7 +474,7 @@ fun RowPasswordR(
 
 
 @Composable
-fun RowPasswordRC(
+fun RowPasswordCR(
     password: String,
     passwordChange: (String) -> Unit,
     passwordVisible: Boolean,

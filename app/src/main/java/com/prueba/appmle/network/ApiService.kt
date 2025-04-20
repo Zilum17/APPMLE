@@ -7,6 +7,12 @@ import retrofit2.http.POST
 interface ApiService {
     @POST("login")
     suspend fun postLogin(@Body request: LoginRequest): Response<LoginResponse>
+
+    @POST("register")
+    suspend fun postRegister(@Body request: RegisterRequest): Response<LoginResponse>
+
+    @POST("verify")
+    suspend fun postVerify(@Body request: VerifyTokenRequest): Response<LoginResponse>
 }
 
 object RetrofitClient {
