@@ -7,30 +7,24 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.prueba.appmle.viewmodel.LoginViewModel
 import androidx.navigation.NavController
-import com.prueba.appmle.ui.theme.utils.Color3
+import com.prueba.appmle.ui.theme.utils.Color4
 import com.prueba.appmle.ui.theme.utils.Color5
 import com.prueba.appmle.ui.theme.utils.Color6
 import com.prueba.appmle.ui.theme.utils.Color7
+import com.prueba.appmle.ui.theme.utils.Nav
 import com.prueba.appmle.ui.theme.utils.Typography
 
 @Composable
-fun HomeScreen(viewModel: LoginViewModel, navController: NavController) {
-    val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
+fun SearchScreen(navController: NavController) {
     Box (
         modifier = Modifier
             .fillMaxSize()
@@ -53,35 +47,15 @@ fun HomeScreen(viewModel: LoginViewModel, navController: NavController) {
                         .padding(0.dp, 56.dp, 0.dp, 20.dp)
                         .fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    text = "EmprendiAPP".uppercase(),
+                    text = "Buscar".uppercase(),
                     style = Typography.titleLarge.copy(
                         letterSpacing = 4.sp,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp
                     ),
-                    color = Color5
+                    color = Color4
                 )
-            }
-            Row (
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-
             }
         }
     }
 }
-
-//            Button(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(16.dp, 16.dp, 16.dp, 0.dp),
-//                onClick = {
-//                    viewModel.logout(context)
-//                    navController.navigate("login") {
-//                        popUpTo(navController.graph.startDestinationId) { inclusive = true }
-//                    }
-//                }
-//            ) {
-//
-//            }
