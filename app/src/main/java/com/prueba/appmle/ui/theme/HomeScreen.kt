@@ -1,6 +1,8 @@
 package com.prueba.appmle.ui.theme
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,39 +20,15 @@ import androidx.compose.ui.unit.dp
 import com.prueba.appmle.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
 import androidx.navigation.NavController
+import com.prueba.appmle.ui.theme.utils.Color4
+import com.prueba.appmle.ui.theme.utils.Color7
 
 @Composable
-fun HomeScreen(viewModel: LoginViewModel, navController: NavController) {
+fun HomeScreen() {
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
+//    val coroutineScope = rememberCoroutineScope()
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
-        ) {
-            Text("¡Bienvenido a la pantalla principal!")
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = {
-                    coroutineScope.launch {
-                        viewModel.logout(context)
-                        navController.navigate("login") {
-                            popUpTo(navController.graph.startDestinationId) {
-                                inclusive = true
-                            }
-                        }
-                    }
-                }
-            ) {
-                Text("Cerrar Sesión")
-            }
-        }
+    Box (modifier = Modifier.background(Color7)) {
+
     }
 }

@@ -42,10 +42,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.prueba.appmle.ui.theme.utils.Color1
 import com.prueba.appmle.ui.theme.utils.Color3
@@ -202,7 +200,7 @@ fun RegisterScreen (viewModel: LoginViewModel, navController: NavController) {
                                 passwordVisibleC = !passwordVisibleC
                             }
                         )
-                        RowButtonLogin(
+                        RowButtonRegister(
                             isActive = isValidEmailR && isValidPasswordR && isValidFirstNameR && isValidLastNameR && isValidPasswordCR,
                         ) {
                             coroutineScope.launch{
@@ -424,9 +422,9 @@ fun RowPasswordR(
             textStyle = Typography.bodyLarge,
             trailingIcon = {
                 val image = if (passwordVisible) {
-                    Icons.Filled.VisibilityOff
-                } else {
                     Icons.Filled.Visibility
+                } else {
+                    Icons.Filled.VisibilityOff
                 }
                 IconButton(
                     onClick = passwordVisibleChange
@@ -498,9 +496,9 @@ fun RowPasswordCR(
             textStyle = Typography.bodyLarge,
             trailingIcon = {
                 val image = if (passwordVisible) {
-                    Icons.Filled.VisibilityOff
-                } else {
                     Icons.Filled.Visibility
+                } else {
+                    Icons.Filled.VisibilityOff
                 }
                 IconButton(
                     onClick = passwordVisibleChange

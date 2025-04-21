@@ -38,7 +38,6 @@ android {
         compose = true
     }
 }
-
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -69,6 +68,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.lifecycle.livedata)
+    implementation("com.ehsanmsz:msz-progress-indicator:0.8.0")
 }
 
 

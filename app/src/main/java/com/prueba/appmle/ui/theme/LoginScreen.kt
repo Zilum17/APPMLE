@@ -42,7 +42,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.prueba.appmle.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
@@ -73,22 +72,6 @@ fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
     val letterSpacing = remember { Animatable(1f) }
     val interactionSource = remember { MutableInteractionSource() }
     val coroutineScope = rememberCoroutineScope()
-
-    val tokenExists: Boolean by viewModel.tokenVerificationResult.observeAsState(false)
-    LaunchedEffect(Unit) {
-        if (!tokenExists) {
-            viewModel.verifyToken(context)
-        }
-    }
-    LaunchedEffect(tokenExists) {
-        if (tokenExists) {
-            navController.navigate("home") {
-                popUpTo("login") {
-                    inclusive = true
-                }
-            }
-        }
-    }
 
     if (isLoading) {
         Loading()
@@ -342,9 +325,9 @@ fun RowPassword(
             textStyle = Typography.bodyLarge,
             trailingIcon = {
                 val image = if (passwordVisible) {
-                    Icons.Filled.VisibilityOff
-                } else {
                     Icons.Filled.Visibility
+                } else {
+                    Icons.Filled.VisibilityOff
                 }
                 IconButton(
                     onClick = passwordVisibleChange

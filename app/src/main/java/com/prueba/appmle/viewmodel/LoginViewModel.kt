@@ -11,7 +11,6 @@ import com.prueba.appmle.network.RetrofitClient
 import com.prueba.appmle.network.LoginRequest
 import androidx.core.content.edit
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.compose.rememberNavController
 import com.prueba.appmle.network.RegisterRequest
 import com.prueba.appmle.network.VerifyTokenRequest
 import kotlinx.coroutines.launch
@@ -50,7 +49,7 @@ class LoginViewModel : ViewModel() {
     // Funcion guardar token de rom
     fun saveJwtToken(context: Context, token: String) {
         val sharedPreferences = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
-        sharedPreferences.edit() { putString("jwt_token", token) }
+        sharedPreferences.edit { putString("jwt_token", token) }
         _jwtToken.value = token
     }
     // Funcion obtener token de rom
@@ -133,9 +132,9 @@ class LoginViewModel : ViewModel() {
         _passwordCR.value = newPassword
     }
     val isValidPasswordCR: LiveData<Boolean> = _passwordCR.map { password ->
-        isValidPasswordCR(password)
+        isValidPasswordCR()
     }
-    private val _tokenVerificationResult = MutableLiveData<Boolean>(false)
+    private val _tokenVerificationResult = MutableLiveData<Boolean>(null)
     val tokenVerificationResult: LiveData<Boolean> get() = _tokenVerificationResult
     // Funcion para validar nombre
     private fun isValidFirstNameR(name: String): Boolean {
@@ -155,7 +154,7 @@ class LoginViewModel : ViewModel() {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
     // Funcion para validar contraseña repetida
-    private fun isValidPasswordCR(name: String): Boolean {
+    private fun isValidPasswordCR(): Boolean {
         return passwordR.value == passwordCR.value
     }
     // Funcion para registrarse e iniciar sesion
@@ -191,7 +190,6 @@ class LoginViewModel : ViewModel() {
         return false
     }
      fun verifyToken(context: Context) {
-
          viewModelScope.launch {
              getJwtToken(context)
              _isLoading.value = true
@@ -222,7 +220,7 @@ class LoginViewModel : ViewModel() {
     fun logout(context: Context) {
         viewModelScope.launch {
             val sharedPrefs = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
-            sharedPrefs.edit() { clear() }
+            sharedPrefs.edit { clear() }
         }
     }
 
