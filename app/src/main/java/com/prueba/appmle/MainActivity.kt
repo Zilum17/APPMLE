@@ -126,7 +126,7 @@ fun AppNavigation() {
                 popEnterTransition = { EnterTransition.None },
                 popExitTransition = { ExitTransition.None }
             ) {
-                HomeScreen(viewModel = LoginViewModel(), navController = navController)
+                HomeScreen()
             }
             composable(
                 "search",
