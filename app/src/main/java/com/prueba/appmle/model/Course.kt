@@ -18,24 +18,3 @@ data class Course(
     val status: String
 )
 
-data class Modules(
-    val id: Int,
-    val courseId: Int,
-    val title: String,
-    val description: String,
-    val order: Int,
-    val dateCreated: String,
-    val dateUpdated: String
-)
-
-data class Lessons(
-    val id: Int,
-    val moduleId: Int,
-    val title: String,
-    val description: String,
-    val video: String,
-    val duration: Int,
-    val order: Int,
-    val dateCreated: String,
-    val dateUpdated: String
-)

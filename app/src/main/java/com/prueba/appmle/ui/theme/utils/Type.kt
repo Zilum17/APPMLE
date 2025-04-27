@@ -16,50 +16,50 @@ val MiTipografia = FontFamily(
 val Typography = Typography(
 
 
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    ),
-    bodyMedium = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 14.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 2.sp,
-    ),
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 24.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 4.sp
-    )
-
-
 //    bodyLarge = TextStyle(
-//        fontFamily = MiTipografia,
+//        fontFamily = FontFamily.Default,
 //        fontWeight = FontWeight.Normal,
-//        fontSize = 14.sp,
+//        fontSize = 16.sp,
 //        lineHeight = 24.sp,
 //        letterSpacing = 0.5.sp
 //    ),
 //    bodyMedium = TextStyle(
-//        fontFamily = MiTipografia,
+//        fontFamily = FontFamily.Default,
 //        fontWeight = FontWeight.Medium,
 //        fontSize = 14.sp,
 //        lineHeight = 28.sp,
 //        letterSpacing = 2.sp,
 //    ),
 //    titleLarge = TextStyle(
-//        fontFamily = MiTipografia,
+//        fontFamily = FontFamily.Default,
 //        fontWeight = FontWeight.Medium,
 //        fontSize = 24.sp,
 //        lineHeight = 28.sp,
 //        letterSpacing = 4.sp
 //    )
+
+
+    bodyLarge = TextStyle(
+        fontFamily = MiTipografia,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = MiTipografia,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 2.sp,
+    ),
+    titleLarge = TextStyle(
+        fontFamily = MiTipografia,
+        fontWeight = FontWeight.Medium,
+        fontSize = 24.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 4.sp
+    )
 
 
     /* Other default text styles to override

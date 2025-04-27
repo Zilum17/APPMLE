@@ -43,7 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.prueba.appmle.viewmodel.LoginViewModel
+import com.prueba.appmle.viewmodel.AuthViewModel
 import kotlinx.coroutines.launch
 import androidx.navigation.NavController
 import com.prueba.appmle.ui.theme.utils.Color1
@@ -57,15 +57,15 @@ import com.prueba.appmle.ui.theme.utils.Loading
 import com.prueba.appmle.ui.theme.utils.Typography
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
+fun LoginScreen(authViewModel: AuthViewModel, navController: NavController) {
     val context = LocalContext.current
-    val email: String by viewModel.email.observeAsState(initial = "")
-    val isValidEmail: Boolean by viewModel.isValidEmail.observeAsState(initial = false)
+    val email: String by authViewModel.email.observeAsState(initial = "")
+    val isValidEmail: Boolean by authViewModel.isValidEmail.observeAsState(initial = false)
 
-    val password: String by viewModel.password.observeAsState(initial = "")
-    val isValidPassword: Boolean by viewModel.isValidPassword.observeAsState(initial = false)
+    val password: String by authViewModel.password.observeAsState(initial = "")
+    val isValidPassword: Boolean by authViewModel.isValidPassword.observeAsState(initial = false)
 
-    val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
+    val isLoading: Boolean by authViewModel.isLoading.observeAsState(initial = false)
 
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -142,14 +142,14 @@ fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
                         RowEmail(
                             email = email,
                             emailChange = { newEmail ->
-                                viewModel.updateEmail(newEmail)
+                                authViewModel.updateEmail(newEmail)
                             },
                             isValid = isValidEmail
                         )
                         RowPassword(
                             password = password,
                             passwordChange = { newPassword ->
-                                viewModel.updatePassword(newPassword)
+                                authViewModel.updatePassword(newPassword)
                             },
                             isValidPassword = isValidPassword,
                             passwordVisible = passwordVisible,
@@ -176,7 +176,7 @@ fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
                             isActive = isValidPassword && isValidEmail,
                         ) {
                             coroutineScope.launch{
-                                val loginSuccess = viewModel.login(context)
+                                val loginSuccess = authViewModel.login(context)
                                 if (loginSuccess) {
                                     navController.navigate("home") {
                                         popUpTo("login") { inclusive = true }

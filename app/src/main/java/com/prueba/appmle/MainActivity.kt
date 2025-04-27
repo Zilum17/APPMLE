@@ -3,6 +3,7 @@ package com.prueba.appmle
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.EnterTransition
@@ -39,7 +40,8 @@ import com.prueba.appmle.ui.theme.utils.Color4
 import com.prueba.appmle.ui.theme.utils.Loading
 import com.prueba.appmle.ui.theme.utils.Nav
 import com.prueba.appmle.ui.theme.utils.NavItem
-import com.prueba.appmle.viewmodel.LoginViewModel
+import com.prueba.appmle.viewmodel.AuthViewModel
+import com.prueba.appmle.viewmodel.CoursesViewModel
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
@@ -57,8 +59,9 @@ class MainActivity : ComponentActivity() {
 fun AppNavigation() {
     val context = LocalContext.current
     val navController = rememberNavController()
-    val viewModel: LoginViewModel = viewModel()
-    val isTokenValid by viewModel.tokenVerificationResult.observeAsState()
+    val authViewModel: AuthViewModel = viewModel()
+    val coursesViewModel = CoursesViewModel(authViewModel = authViewModel)
+    val isTokenValid by authViewModel.tokenVerificationResult.observeAsState()
     val startDestination = "loading"
 
     val navItems = listOf(
@@ -70,22 +73,17 @@ fun AppNavigation() {
     val showBottomBar = navController.currentBackStackEntryAsState().value?.destination?.route in listOf("home", "search", "courses", "profile")
 
     LaunchedEffect(isTokenValid) {
-        println("MyApp: isTokenValid changed to $isTokenValid")
         if (isTokenValid != null) {
             val destination = if (isTokenValid == true) "home" else "login"
-            println("MyApp: Navigating to $destination")
             navController.navigate(destination) {
                 popUpTo(navController.graph.startDestinationId) { inclusive = true }
                 launchSingleTop = true
             }
-        } else {
-            println("MyApp: Waiting for token verification")
         }
     }
-
     LaunchedEffect(Unit) {
         if (isTokenValid == null)
-            viewModel.verifyToken(context)
+            authViewModel.verifyToken(context)
     }
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -108,7 +106,7 @@ fun AppNavigation() {
                 popEnterTransition = { EnterTransition.None },
                 popExitTransition = { ExitTransition.None }
             ) {
-                LoginScreen(viewModel = LoginViewModel(), navController = navController)
+                LoginScreen(authViewModel = authViewModel, navController = navController)
             }
             composable(
                 "register",
@@ -117,7 +115,7 @@ fun AppNavigation() {
                 popEnterTransition = { EnterTransition.None },
                 popExitTransition = { ExitTransition.None }
             ) {
-                RegisterScreen(viewModel = LoginViewModel(), navController = navController)
+                RegisterScreen(authViewModel = authViewModel, navController = navController)
             }
             composable(
                 "home",
@@ -126,7 +124,7 @@ fun AppNavigation() {
                 popEnterTransition = { EnterTransition.None },
                 popExitTransition = { ExitTransition.None }
             ) {
-                HomeScreen()
+                HomeScreen(coursesViewModel = coursesViewModel)
             }
             composable(
                 "search",
@@ -148,7 +146,7 @@ fun AppNavigation() {
                 exitTransition = { ExitTransition.None },
                 popEnterTransition = { EnterTransition.None },
                 popExitTransition = { ExitTransition.None }
-            ) { ProfileScreen(navController = navController) }
+            ) { ProfileScreen(authViewModel = authViewModel, navController = navController) }
         }
         Column(
             modifier = Modifier.fillMaxSize()

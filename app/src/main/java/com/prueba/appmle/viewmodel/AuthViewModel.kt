@@ -15,7 +15,7 @@ import com.prueba.appmle.network.RegisterRequest
 import com.prueba.appmle.network.VerifyTokenRequest
 import kotlinx.coroutines.launch
 
-class LoginViewModel : ViewModel() {
+class AuthViewModel : ViewModel() {
     // Variables para email: Login
     private val _email = MutableLiveData<String>()
     val email: LiveData<String> = _email

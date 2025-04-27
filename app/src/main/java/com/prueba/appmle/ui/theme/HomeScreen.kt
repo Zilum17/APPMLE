@@ -1,5 +1,6 @@
 package com.prueba.appmle.ui.theme
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,14 +12,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
+import androidx.compose.runtime.*
 import androidx.compose.runtime.Composable
-//import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-//import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.prueba.appmle.model.Course
@@ -27,49 +29,56 @@ import com.prueba.appmle.ui.theme.utils.Color5
 import com.prueba.appmle.ui.theme.utils.Color6
 import com.prueba.appmle.ui.theme.utils.Color7
 import com.prueba.appmle.ui.theme.utils.Typography
-import com.prueba.appmle.ui.theme.utils.home.VideoCard
+import com.prueba.appmle.ui.theme.utils.home.ImageCard
+import com.prueba.appmle.viewmodel.CoursesViewModel
 
-@Preview(showSystemUi = true)
 @Composable
-fun HomeScreen() {
-//    val context = LocalContext.current
+fun HomeScreen(coursesViewModel: CoursesViewModel) {
+    val courses: List<Course> by coursesViewModel.courses.observeAsState(initial = emptyList())
+//    val courses: List<Course> = listOf(
+//        Course(
+//            id = 1,
+//            title = "Gestión Empresarial Efectiva",
+//            description = "Aprende estrategias clave para administrar una empresa, desde finanzas hasta liderazgo de equipos",
+//            category = "Administración de Empresas",
+//            level = "intermedio",
+//            image = "http://192.168.0.16:8000/image1.jpg",
+//            price = 119.99,
+//            isFree = false,
+//            subscription = false,
+//            duration = 30,
+//            qualification = 4.5,
+//            reviews = 100,
+//            dateCreated = "2023-01-01",
+//            dateUpdated = "2023-01-01",
+//            status = "publicado"
+//        ),
+//        Course(
+//            id = 2,
+//            title = "Marketing Digital para Pymes",
+//            description = "Domina las herramientas esenciales para promocionar tu negocio en redes sociales y Google.",
+//            category = "Marketing",
+//            level = "principiante",
+//            image = "http://192.168.0.16:8000/image2.jpg",
+//            price = 0.00,
+//            isFree = true,
+//            subscription = false,
+//            duration = 0,
+//            qualification = 4.7,
+//            reviews = 10,
+//            dateCreated = "2023-01-01",
+//            dateUpdated = "2023-01-01",
+//            status = "publicado"
+//        )
+//    )
+    val context = LocalContext.current
 //    val coroutineScope = rememberCoroutineScope()
-    val courses: List<Course> = listOf(
-        Course(
-            id = 1,
-            title = "Video 1",
-            description = "Descripción del video 1",
-            category = "Categoría 1",
-            level = "Nivel 1",
-            image = "http://192.168.0.16:8000/image1.jpg",
-            price = 19.99,
-            isFree = true,
-            subscription = false,
-            duration = 0,
-            qualification = 4.5,
-            reviews = 100,
-            dateCreated = "2023-01-01",
-            dateUpdated = "2023-01-01",
-            status = "Publicado"
-        ),
-        Course(
-            id = 1,
-            title = "Video 2",
-            description = "Descripción del video 1",
-            category = "Categoría 1",
-            level = "Nivel 1",
-            image = "http://192.168.0.16:8000/image2.jpg",
-            price = 19.99,
-            isFree = true,
-            subscription = false,
-            duration = 0,
-            qualification = 4.5,
-            reviews = 100,
-            dateCreated = "2023-01-01",
-            dateUpdated = "2023-01-01",
-            status = "Publicado"
-        )
-    )
+    LaunchedEffect(Unit) {
+        if (courses.isEmpty())
+            coursesViewModel.getCourses(context)
+
+    }
+    Log.d("CoursesScreen", "Cursos en Composable: $courses")
     Box (
         modifier = Modifier
             .fillMaxSize()
@@ -119,29 +128,9 @@ fun HomeScreen() {
                 contentPadding = PaddingValues(horizontal = 8.dp)
             ) {
                 items(courses) { course ->
-                    VideoCard(course = course)
+                    ImageCard(course = course)
                 }
             }
-//            Row (
-//                modifier = Modifier
-//                    .fillMaxSize()
-//            ) {
-////                VideoPlayer("http://192.168.0.16:8000/video1.mp4")
-//            }
         }
     }
 }
-
-//            Button(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(16.dp, 16.dp, 16.dp, 0.dp),
-//                onClick = {
-//                    viewModel.logout(context)
-//                    navController.navigate("login") {
-//                        popUpTo(navController.graph.startDestinationId) { inclusive = true }
-//                    }
-//                }
-//            ) {
-//
-//            }

@@ -54,11 +54,11 @@ import com.prueba.appmle.ui.theme.utils.Color7
 import com.prueba.appmle.ui.theme.utils.Color8
 import com.prueba.appmle.ui.theme.utils.Loading
 import com.prueba.appmle.ui.theme.utils.Typography
-import com.prueba.appmle.viewmodel.LoginViewModel
+import com.prueba.appmle.viewmodel.AuthViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun RegisterScreen (viewModel: LoginViewModel, navController: NavController) {
+fun RegisterScreen (authViewModel: AuthViewModel, navController: NavController) {
 
     BackHandler {
         navController.navigate("login") {
@@ -68,22 +68,22 @@ fun RegisterScreen (viewModel: LoginViewModel, navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    val firstNameR: String by viewModel.firstNameR.observeAsState(initial = "")
-    val isValidFirstNameR: Boolean by viewModel.isValidFirstNameR.observeAsState(initial = false)
+    val firstNameR: String by authViewModel.firstNameR.observeAsState(initial = "")
+    val isValidFirstNameR: Boolean by authViewModel.isValidFirstNameR.observeAsState(initial = false)
 
-    val lastNameR: String by viewModel.lastNameR.observeAsState(initial = "")
-    val isValidLastNameR: Boolean by viewModel.isValidLastNameR.observeAsState(initial = false)
+    val lastNameR: String by authViewModel.lastNameR.observeAsState(initial = "")
+    val isValidLastNameR: Boolean by authViewModel.isValidLastNameR.observeAsState(initial = false)
 
-    val emailR: String by viewModel.emailR.observeAsState(initial = "")
-    val isValidEmailR: Boolean by viewModel.isValidEmailR.observeAsState(initial = false)
+    val emailR: String by authViewModel.emailR.observeAsState(initial = "")
+    val isValidEmailR: Boolean by authViewModel.isValidEmailR.observeAsState(initial = false)
 
-    val passwordR: String by viewModel.passwordR.observeAsState(initial = "")
-    val isValidPasswordR: Boolean by viewModel.isValidPasswordR.observeAsState(initial = false)
+    val passwordR: String by authViewModel.passwordR.observeAsState(initial = "")
+    val isValidPasswordR: Boolean by authViewModel.isValidPasswordR.observeAsState(initial = false)
 
-    val passwordCR: String by viewModel.passwordCR.observeAsState(initial = "")
-    val isValidPasswordCR: Boolean by viewModel.isValidPasswordCR.observeAsState(initial = false)
+    val passwordCR: String by authViewModel.passwordCR.observeAsState(initial = "")
+    val isValidPasswordCR: Boolean by authViewModel.isValidPasswordCR.observeAsState(initial = false)
 
-    val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
+    val isLoading: Boolean by authViewModel.isLoading.observeAsState(initial = false)
 
     var passwordVisible by remember { mutableStateOf(false) }
     var passwordVisibleC by remember { mutableStateOf(false) }
@@ -160,28 +160,28 @@ fun RegisterScreen (viewModel: LoginViewModel, navController: NavController) {
                         RowFirstNameR(
                             firstName = firstNameR,
                             firstNameChange = { newFirstNameR ->
-                                viewModel.updateFirstNameR(newFirstNameR)
+                                authViewModel.updateFirstNameR(newFirstNameR)
                             },
                             isValid = isValidFirstNameR
                         )
                         RowLastNameR(
                             lastName = lastNameR,
                             lastNameChange = { newLastNameR ->
-                                viewModel.updateLastNameR(newLastNameR)
+                                authViewModel.updateLastNameR(newLastNameR)
                             },
                             isValid = isValidLastNameR
                         )
                         RowEmailR(
                             email = emailR,
                             emailChange = { newEmail ->
-                                viewModel.updateEmailR(newEmail)
+                                authViewModel.updateEmailR(newEmail)
                             },
                             isValid = isValidEmailR
                         )
                         RowPasswordR(
                             password = passwordR,
                             passwordChange = { newPassword ->
-                                viewModel.updatePasswordR(newPassword)
+                                authViewModel.updatePasswordR(newPassword)
                             },
                             isValidPassword = isValidPasswordR,
                             passwordVisible = passwordVisible,
@@ -192,7 +192,7 @@ fun RegisterScreen (viewModel: LoginViewModel, navController: NavController) {
                         RowPasswordCR(
                             password = passwordCR,
                             passwordChange = { newPassword ->
-                                viewModel.updatePasswordCR(newPassword)
+                                authViewModel.updatePasswordCR(newPassword)
                             },
                             isValidPassword = isValidPasswordCR,
                             passwordVisible = passwordVisibleC,
@@ -204,7 +204,7 @@ fun RegisterScreen (viewModel: LoginViewModel, navController: NavController) {
                             isActive = isValidEmailR && isValidPasswordR && isValidFirstNameR && isValidLastNameR && isValidPasswordCR,
                         ) {
                             coroutineScope.launch{
-                                val registerSuccess = viewModel.register(context)
+                                val registerSuccess = authViewModel.register(context)
                                 if (registerSuccess) {
                                     navController.navigate("home") {
                                         popUpTo("register") { inclusive = true }
