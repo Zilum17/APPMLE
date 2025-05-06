@@ -41,7 +41,7 @@ class AuthViewModel : ViewModel() {
     private val _errorMessage = MutableLiveData<String?>(null)
     val errorMessage: LiveData<String?> = _errorMessage
     // Varable para el usuario
-    private val _userData = MutableLiveData<User>()
+    private val _userData = MutableLiveData<User>(null)
     val userData: LiveData<User> = _userData
     // Variable para el token
     private val _jwtToken = MutableLiveData<String?>(null)
@@ -216,6 +216,7 @@ class AuthViewModel : ViewModel() {
          }
 
     }
+
     // Funcion para terminar sesion
     fun logout(context: Context) {
         viewModelScope.launch {

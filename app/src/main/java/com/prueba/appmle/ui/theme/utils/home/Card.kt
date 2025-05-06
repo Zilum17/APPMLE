@@ -1,11 +1,14 @@
 package com.prueba.appmle.ui.theme.utils.home
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -50,7 +53,7 @@ fun ImageCard(course: Course) {
         modifier = Modifier
             .width(280.dp)
             .padding(8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color7
         ),
@@ -63,11 +66,20 @@ fun ImageCard(course: Course) {
                 modifier = Modifier.fillMaxWidth().aspectRatio(16f/9f),
                 contentScale = ContentScale.FillWidth,
                 loading = {
-                    CircularProgressIndicator(modifier = Modifier
-                        .align(Alignment.Center)
-                        .size(40.dp),
-                        color = Color6
-                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .align(Alignment.Center),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .size(50.dp)
+                                .align(Alignment.Center),
+                            color = Color6,
+                            strokeWidth = 2.dp
+                        )
+                    }
                 }
             )
             Text(

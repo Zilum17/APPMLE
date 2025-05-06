@@ -1,5 +1,6 @@
 package com.prueba.appmle.ui.theme
 
+import android.app.Activity
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -41,8 +42,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowInsetsControllerCompat
 import com.prueba.appmle.viewmodel.AuthViewModel
 import kotlinx.coroutines.launch
 import androidx.navigation.NavController
@@ -72,7 +75,11 @@ fun LoginScreen(authViewModel: AuthViewModel, navController: NavController) {
     val letterSpacing = remember { Animatable(1f) }
     val interactionSource = remember { MutableInteractionSource() }
     val coroutineScope = rememberCoroutineScope()
-
+    val view = LocalView.current
+    SideEffect {
+        val window = (view.context as Activity).window
+        WindowInsetsControllerCompat(window, view).isAppearanceLightStatusBars = false
+    }
     if (isLoading) {
         Loading()
     } else {
@@ -99,7 +106,7 @@ fun LoginScreen(authViewModel: AuthViewModel, navController: NavController) {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(650.dp),
+                        .height(600.dp),
                     shape = RoundedCornerShape(30.dp, 30.dp, 0.dp, 0.dp),
                     elevation = CardDefaults.cardElevation(
                         defaultElevation = 20.dp

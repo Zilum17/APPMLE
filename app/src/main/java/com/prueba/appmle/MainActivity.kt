@@ -3,20 +3,15 @@ package com.prueba.appmle
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.CollectionsBookmark
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Search
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,16 +25,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.prueba.appmle.ui.theme.CoursesScreen
 import com.prueba.appmle.ui.theme.HomeScreen
 import com.prueba.appmle.ui.theme.LoginScreen
 import com.prueba.appmle.ui.theme.ProfileScreen
 import com.prueba.appmle.ui.theme.RegisterScreen
+import com.prueba.appmle.ui.theme.ResourcesScreen
 import com.prueba.appmle.ui.theme.SearchScreen
 import com.prueba.appmle.ui.theme.utils.Color4
+import com.prueba.appmle.ui.theme.utils.Color7
 import com.prueba.appmle.ui.theme.utils.Loading
 import com.prueba.appmle.ui.theme.utils.Nav
-import com.prueba.appmle.ui.theme.utils.NavItem
 import com.prueba.appmle.viewmodel.AuthViewModel
 import com.prueba.appmle.viewmodel.CoursesViewModel
 
@@ -47,6 +42,7 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
             AppNavigation()
@@ -60,18 +56,13 @@ fun AppNavigation() {
     val context = LocalContext.current
     val navController = rememberNavController()
     val authViewModel: AuthViewModel = viewModel()
-    val coursesViewModel = CoursesViewModel(authViewModel = authViewModel)
+    val coursesViewModel: CoursesViewModel = viewModel()
     val isTokenValid by authViewModel.tokenVerificationResult.observeAsState()
     val startDestination = "loading"
-
-    val navItems = listOf(
-        NavItem("home", "Inicio", Icons.Outlined.Home),
-        NavItem("search", "Buscar",  Icons.Outlined.Search),
-        NavItem("courses", "Cursos",  Icons.Outlined.CollectionsBookmark),
-        NavItem("profile", "Perfil", Icons.Outlined.Person)
-    )
-    val showBottomBar = navController.currentBackStackEntryAsState().value?.destination?.route in listOf("home", "search", "courses", "profile")
-
+    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+    val routesWithBottomBar = listOf("home", "search", "resources", "profile")
+    val routesWithCustomBackground = listOf("login", "register")
+    val backgroundColor = if (currentRoute in routesWithCustomBackground) Color4 else Color7
     LaunchedEffect(isTokenValid) {
         if (isTokenValid != null) {
             val destination = if (isTokenValid == true) "home" else "login"
@@ -85,79 +76,93 @@ fun AppNavigation() {
         if (isTokenValid == null)
             authViewModel.verifyToken(context)
     }
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = Color4
-    ) {
-        NavHost(navController = navController, startDestination = startDestination) {
-            composable(
-                "loading",
-                enterTransition = { EnterTransition.None },
-                exitTransition = { ExitTransition.None },
-                popEnterTransition = { EnterTransition.None },
-                popExitTransition = { ExitTransition.None }
-            ) {
-                Loading()
-            }
-            composable(
-                "login",
-                enterTransition = { EnterTransition.None },
-                exitTransition = { ExitTransition.None },
-                popEnterTransition = { EnterTransition.None },
-                popExitTransition = { ExitTransition.None }
-            ) {
-                LoginScreen(authViewModel = authViewModel, navController = navController)
-            }
-            composable(
-                "register",
-                enterTransition = { EnterTransition.None },
-                exitTransition = { ExitTransition.None },
-                popEnterTransition = { EnterTransition.None },
-                popExitTransition = { ExitTransition.None }
-            ) {
-                RegisterScreen(authViewModel = authViewModel, navController = navController)
-            }
-            composable(
-                "home",
-                enterTransition = { EnterTransition.None },
-                exitTransition = { ExitTransition.None },
-                popEnterTransition = { EnterTransition.None },
-                popExitTransition = { ExitTransition.None }
-            ) {
-                HomeScreen(coursesViewModel = coursesViewModel)
-            }
-            composable(
-                "search",
-                enterTransition = { EnterTransition.None },
-                exitTransition = { ExitTransition.None },
-                popEnterTransition = { EnterTransition.None },
-                popExitTransition = { ExitTransition.None }
-            ) { SearchScreen(navController = navController) }
-            composable(
-                "courses",
-                enterTransition = { EnterTransition.None },
-                exitTransition = { ExitTransition.None },
-                popEnterTransition = { EnterTransition.None },
-                popExitTransition = { ExitTransition.None }
-            ) { CoursesScreen(navController = navController) }
-            composable(
-                "profile",
-                enterTransition = { EnterTransition.None },
-                exitTransition = { ExitTransition.None },
-                popEnterTransition = { EnterTransition.None },
-                popExitTransition = { ExitTransition.None }
-            ) { ProfileScreen(authViewModel = authViewModel, navController = navController) }
-        }
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Spacer(modifier = Modifier.weight(1f))
-            if (showBottomBar) {
+    Scaffold(
+        bottomBar = {
+            if (currentRoute in routesWithBottomBar) {
                 Nav(
                     navController = navController,
-                    items = navItems,
                     modifier = Modifier.fillMaxWidth()
                 )
+            }
+        },
+        modifier = Modifier.fillMaxSize(),
+        containerColor = backgroundColor
+    ) { innerPadding ->
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+        ) {
+            NavHost(navController = navController, startDestination = startDestination) {
+                composable(
+                    "loading",
+                    enterTransition = { EnterTransition.None },
+                    exitTransition = { ExitTransition.None },
+                    popEnterTransition = { EnterTransition.None },
+                    popExitTransition = { ExitTransition.None }
+                ) {
+                    Loading()
+                }
+                composable(
+                    "login",
+                    enterTransition = { EnterTransition.None },
+                    exitTransition = { ExitTransition.None },
+                    popEnterTransition = { EnterTransition.None },
+                    popExitTransition = { ExitTransition.None }
+                ) {
+                    LoginScreen(authViewModel = authViewModel, navController = navController)
+                }
+                composable(
+                    "register",
+                    enterTransition = { EnterTransition.None },
+                    exitTransition = { ExitTransition.None },
+                    popEnterTransition = { EnterTransition.None },
+                    popExitTransition = { ExitTransition.None }
+                ) {
+                    RegisterScreen(authViewModel = authViewModel, navController = navController)
+                }
+                composable(
+                    "home",
+                    enterTransition = { EnterTransition.None },
+                    exitTransition = { ExitTransition.None },
+                    popEnterTransition = { EnterTransition.None },
+                    popExitTransition = { ExitTransition.None }
+                ) {
+                    HomeScreen(navController = navController, coursesViewModel = coursesViewModel)
+                }
+                composable(
+                    "search",
+                    enterTransition = { EnterTransition.None },
+                    exitTransition = { ExitTransition.None },
+                    popEnterTransition = { EnterTransition.None },
+                    popExitTransition = { ExitTransition.None }
+                ) {
+                    SearchScreen(
+//                        navController = navController
+                    )
+                }
+                composable(
+                    "resources",
+                    enterTransition = { EnterTransition.None },
+                    exitTransition = { ExitTransition.None },
+                    popEnterTransition = { EnterTransition.None },
+                    popExitTransition = { ExitTransition.None }
+                ) {
+                    ResourcesScreen(navController = navController)
+                }
+                composable(
+                    "profile",
+                    enterTransition = { EnterTransition.None },
+                    exitTransition = { ExitTransition.None },
+                    popEnterTransition = { EnterTransition.None },
+                    popExitTransition = { ExitTransition.None }
+                ) {
+                    ProfileScreen(
+                        authViewModel = authViewModel,
+                        coursesViewModel = coursesViewModel,
+                        navController = navController
+                    )
+                }
             }
         }
     }

@@ -13,12 +13,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CollectionsBookmark
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -30,7 +32,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -46,15 +47,18 @@ data class NavItem(
 @Composable
 fun Nav(
     navController: NavController,
-    items: List<NavItem>,
     modifier: Modifier
 ) {
-
+    val items = listOf(
+        NavItem("home", "Inicio", Icons.Outlined.Home),
+        NavItem("search", "Buscar",  Icons.Outlined.Search),
+        NavItem("resources", "Recursos",  Icons.Outlined.CollectionsBookmark),
+        NavItem("profile", "Perfil", Icons.Outlined.Person)
+    )
     NavigationBar(
-        modifier = modifier
+        modifier = modifier.height(100.dp)
             .shadow(
                 elevation = 12.dp,
-
             ),
         containerColor = Color7,
         contentColor = Color1,
@@ -63,10 +67,6 @@ fun Nav(
         val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
         items.forEach { item ->
-            val animationProgress by animateFloatAsState(
-                targetValue = if (currentRoute == item.route) 1f else 0f,
-                animationSpec = tween(durationMillis = 200)
-            )
             CustomNavBarItem(
                 icon = {
                     Icon(imageVector = item.icon, contentDescription = item.title)
@@ -74,15 +74,20 @@ fun Nav(
                 label = { Text(
                     item.title,
                     style = Typography.bodyLarge.copy(
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Normal
                     )
                 )},
                 selected = currentRoute == item.route,
                 onClick = {
-                    navController.navigate(item.route) {
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
+                    if (item.route == "home") {
+                        navController.navigate(item.route) {
+                            popUpTo("home") { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    } else {
+                        navController.navigate(item.route) {
+                            launchSingleTop = true
+                        }
                     }
                 }
             )

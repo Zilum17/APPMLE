@@ -14,16 +14,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class CoursesViewModel(private val authViewModel: AuthViewModel): ViewModel() {
+class CoursesViewModel(): ViewModel() {
     private val _courses = MutableLiveData<List<Course>>(emptyList())
     val courses: LiveData<List<Course>> = _courses
     private val _errorMessage = MutableLiveData<String?>(null)
     val errorMessage: LiveData<String?> = _errorMessage
-     suspend fun getCourses(context: Context) {
-//        viewModelScope.launch{
+    fun getCourses(context: Context) {
+        viewModelScope.launch{
             try {
-                authViewModel.getJwtToken(context)
-                val token = authViewModel.jwtToken
+
+                val token = getJwtToken(context)
                 val response = RetrofitClient.apiService.getCourses("$token")
                 if (response.isSuccessful) {
                     _courses.value = response.body()?.courses.orEmpty()
@@ -37,5 +37,9 @@ class CoursesViewModel(private val authViewModel: AuthViewModel): ViewModel() {
 
             }
         }
-//    }
+    }
+    fun getJwtToken(context: Context): String? {
+        val sharedPreferences = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("jwt_token", null)
+    }
 }

@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,14 +19,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.prueba.appmle.ui.theme.utils.Color4
-import com.prueba.appmle.ui.theme.utils.Color5
 import com.prueba.appmle.ui.theme.utils.Color6
 import com.prueba.appmle.ui.theme.utils.Color7
-import com.prueba.appmle.ui.theme.utils.Nav
 import com.prueba.appmle.ui.theme.utils.Typography
 
 @Composable
-fun CoursesScreen(navController: NavController) {
+fun ResourcesScreen(
+    navController: NavController
+) {
     Box (
         modifier = Modifier
             .fillMaxSize()
@@ -44,7 +46,7 @@ fun CoursesScreen(navController: NavController) {
             ){
                 Text(
                     modifier = Modifier
-                        .padding(0.dp, 56.dp, 0.dp, 20.dp)
+                        .padding(0.dp, 10.dp, 0.dp, 20.dp)
                         .fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     text = "Cursos".uppercase(),
@@ -55,6 +57,14 @@ fun CoursesScreen(navController: NavController) {
                     ),
                     color = Color4
                 )
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
+            ) {
+
             }
         }
     }
