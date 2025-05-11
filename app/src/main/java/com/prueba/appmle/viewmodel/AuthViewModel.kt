@@ -173,6 +173,8 @@ class AuthViewModel : ViewModel() {
             if (response.isSuccessful) {
                 _userData.value = response.body()?.user
                 _jwtToken.value = response.body()?.jwt
+                println(jwtToken.toString())
+                println(userData.value)
                 saveJwtToken(context, jwtToken.toString())
                 return true
             } else {

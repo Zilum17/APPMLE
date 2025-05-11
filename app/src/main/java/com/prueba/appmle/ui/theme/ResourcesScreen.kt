@@ -49,7 +49,7 @@ fun ResourcesScreen(
                         .padding(0.dp, 10.dp, 0.dp, 20.dp)
                         .fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    text = "Cursos".uppercase(),
+                    text = "Recursos".uppercase(),
                     style = Typography.titleLarge.copy(
                         letterSpacing = 4.sp,
                         fontWeight = FontWeight.SemiBold,
