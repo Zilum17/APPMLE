@@ -8,6 +8,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,11 +23,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.prueba.appmle.ui.theme.CourseDetailScreen
 import com.prueba.appmle.ui.theme.HomeScreen
+import com.prueba.appmle.ui.theme.LessonScreen
 import com.prueba.appmle.ui.theme.LoginScreen
 import com.prueba.appmle.ui.theme.ProfileScreen
 import com.prueba.appmle.ui.theme.RegisterScreen
@@ -110,7 +116,10 @@ fun AppNavigation() {
                     popEnterTransition = { EnterTransition.None },
                     popExitTransition = { ExitTransition.None }
                 ) {
-                    LoginScreen(authViewModel = authViewModel, navController = navController)
+                    LoginScreen(
+                        authViewModel = authViewModel,
+                        navController = navController
+                    )
                 }
                 composable(
                     "register",
@@ -119,7 +128,10 @@ fun AppNavigation() {
                     popEnterTransition = { EnterTransition.None },
                     popExitTransition = { ExitTransition.None }
                 ) {
-                    RegisterScreen(authViewModel = authViewModel, navController = navController)
+                    RegisterScreen(
+                        authViewModel = authViewModel,
+                        navController = navController
+                    )
                 }
                 composable(
                     "home",
@@ -128,7 +140,10 @@ fun AppNavigation() {
                     popEnterTransition = { EnterTransition.None },
                     popExitTransition = { ExitTransition.None }
                 ) {
-                    HomeScreen(navController = navController, coursesViewModel = coursesViewModel)
+                    HomeScreen(
+                        navController = navController,
+                        coursesViewModel = coursesViewModel
+                    )
                 }
                 composable(
                     "search",
@@ -138,7 +153,8 @@ fun AppNavigation() {
                     popExitTransition = { ExitTransition.None }
                 ) {
                     SearchScreen(
-//                        navController = navController
+                        coursesViewModel = coursesViewModel,
+                        navController = navController
                     )
                 }
                 composable(
@@ -148,7 +164,9 @@ fun AppNavigation() {
                     popEnterTransition = { EnterTransition.None },
                     popExitTransition = { ExitTransition.None }
                 ) {
-                    ResourcesScreen(navController = navController)
+                    ResourcesScreen(
+                        navController = navController
+                    )
                 }
                 composable(
                     "profile",
@@ -161,6 +179,48 @@ fun AppNavigation() {
                         authViewModel = authViewModel,
                         coursesViewModel = coursesViewModel,
                         navController = navController
+                    )
+                }
+                composable(
+                    "courseDetail/{courseId}",
+                    arguments = listOf(
+                        navArgument(
+                            "courseId"
+                        ) {
+                            type = NavType.StringType
+                        }
+                    ),
+                    enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
+                    exitTransition = { slideOutHorizontally(targetOffsetX = { -it }) },
+                    popEnterTransition = { slideInHorizontally(initialOffsetX = { -it }) },
+                    popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) }
+                ) { backStackEntry ->
+                    val courseId = backStackEntry.arguments?.getString("courseId") ?: ""
+                    CourseDetailScreen(
+                        courseId = courseId,
+                        coursesViewModel = coursesViewModel,
+                        navController = navController
+                    )
+                }
+                composable(
+                    "lesson/{courseId}",
+                    arguments = listOf(
+                        navArgument(
+                            "courseId"
+                        ) {
+                            type = NavType.StringType
+                        }
+                    ),
+                    enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
+                    exitTransition = { slideOutHorizontally(targetOffsetX = { -it }) },
+                    popEnterTransition = { slideInHorizontally(initialOffsetX = { -it }) },
+                    popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) }
+                ) { backStackEntry ->
+                    val courseId = backStackEntry.arguments?.getString("courseId") ?: ""
+                    LessonScreen(
+//                        courseId = courseId,
+//                        coursesViewModel = coursesViewModel,
+//                        navController = navController
                     )
                 }
             }

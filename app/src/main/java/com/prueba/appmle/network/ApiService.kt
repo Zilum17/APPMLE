@@ -18,6 +18,9 @@ interface ApiService {
 
     @GET("courses/get")
     suspend fun getCourses(@Header("Authorization") token: String): Response<CoursesResponse>
+
+    @POST("lessons/get")
+    suspend fun getLessons(@Header("Authorization") token: String, @Body request: LessonsRequest): Response<LessonsResponse>
 }
 
 object RetrofitClient {

@@ -114,7 +114,12 @@ fun HomeScreen(coursesViewModel: CoursesViewModel, navController: NavController)
                     contentPadding = PaddingValues(horizontal = 8.dp)
                 ) {
                     items(courses) { course ->
-                        ImageCard(course = course)
+                        ImageCard(
+                            course = course,
+                            navigate = {
+                                navController.navigate(it)
+                            }
+                        )
                     }
                 }
                 Text(
@@ -135,7 +140,12 @@ fun HomeScreen(coursesViewModel: CoursesViewModel, navController: NavController)
                     contentPadding = PaddingValues(horizontal = 8.dp)
                 ) {
                     items(courses) { course ->
-                        ImageCard(course = course)
+                        ImageCard(
+                            course = course,
+                            navigate = {
+                                navController.navigate(it)
+                            }
+                        )
                     }
                 }
 

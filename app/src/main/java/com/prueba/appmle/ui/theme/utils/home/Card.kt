@@ -48,7 +48,10 @@ import java.util.Locale
 
 
 @Composable
-fun ImageCard(course: Course) {
+fun ImageCard(
+    course: Course,
+    navigate: (String) -> Unit
+) {
     Card (
         modifier = Modifier
             .width(280.dp)
@@ -131,7 +134,9 @@ fun ImageCard(course: Course) {
             Spacer(modifier = Modifier.height(2.dp).fillMaxWidth().background(Color6))
             Button(
                 modifier = Modifier.fillMaxWidth(1f).height(55.dp),
-                onClick = {  },
+                onClick = {
+                    navigate("courseDetail/${course.id}")
+                },
                 shape = RoundedCornerShape(0.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color5,

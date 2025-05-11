@@ -7,6 +7,7 @@ data class Course(
     val category: String,
     val level: String,
     val image: String,
+    val language: String,
     val price: Double,
     val isFree: Boolean,
     val subscription: Boolean,

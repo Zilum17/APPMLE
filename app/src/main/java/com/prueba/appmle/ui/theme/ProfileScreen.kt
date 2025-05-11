@@ -109,6 +109,7 @@ fun ProfileScreen(
                 UserProfile(user = user)
                 ControlProfile(currentPage)
                 PagesProfile(
+                    navController,
                     currentPage,
                     courses,
                     user
@@ -240,12 +241,14 @@ fun ControlProfile(currentPage: MutableState<Int>) {
 
 @Composable
 fun PagesProfile(
+    navController: NavController,
     currentPage: MutableState<Int>,
     courses: List<Course>,
     user: User?,
     logout: () -> Unit) {
     when (currentPage.value) {
         0 -> CursesProfile(
+            navController = navController,
             courses = courses
         )
         1 -> DataProfile (
@@ -379,7 +382,10 @@ fun DataProfile(
 
 
 @Composable
-fun CursesProfile(courses: List<Course>) {
+fun CursesProfile(
+    courses: List<Course>,
+    navController: NavController
+) {
     Spacer(modifier = Modifier.height(10.dp))
     courses.forEach { course ->
         Card(
@@ -399,6 +405,11 @@ fun CursesProfile(courses: List<Course>) {
                 verticalArrangement = Arrangement.Center
             ){
                 Row (
+                    modifier = Modifier.clickable(
+                        onClick = {
+                            navController.navigate("courseDetail/${course.id}")
+                        }
+                    ),
                     verticalAlignment = Alignment.CenterVertically
                 ){
                     Icon(
@@ -413,7 +424,6 @@ fun CursesProfile(courses: List<Course>) {
                             .padding(16.dp)
                             .fillMaxWidth(),
                         style = Typography.bodyLarge
-
                     )
 
                 }
